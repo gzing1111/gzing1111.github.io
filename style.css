@@ -1,0 +1,227 @@
+ /* 다크모드 강제 방지: html/body 배경색을 항상 밝게 고정 (기기 다크모드 무시) */
+  html{ color-scheme: only light; background:#F2F4F7; height:100%; width:100%; }
+  html, body{ background-color:#F2F4F7 !important; width:100%; min-height:100%; overflow-x:hidden; }
+  body, main, .list-row, .topbar, .card, .thumb{ color-scheme: only light; }
+
+  /* ---- 색상/디자인 토큰: 여기 값만 바꾸면 전체 배색이 한번에 바뀝니다 ---- */
+  :root{
+    --bg:#F2F4F7;        /* 페이지 배경(연회색) */
+    --card:#FFFFFF;      /* 카드/리스트 행 배경(흰색) */
+    --line:#E5E8ED;      /* 구분선 색 */
+    --text:#2B2F36;      /* 기본 진한 글자색 */
+    --text-dim:#8A909B;  /* 옅은 보조 글자색(설명, 라벨 등) */
+    --accent:#3E8FD0;    /* 포인트 색(파란색) - 선택/활성 표시에 사용 */
+    --accent-soft:#EAF3FC; /* 포인트 색의 옅은 배경 버전 */
+    --physics:#3E8FD0;   /* 과목별 색 구분: 물리 */
+    --chem:#E0764F;      /* 과목별 색 구분: 화학 */
+    --earth:#B08A2E;     /* 과목별 색 구분: 지구과학 */
+    --bio:#4C9A6A;       /* 과목별 색 구분: 생명과학 */
+    --etc:#8C6FB5;       /* 과목별 색 구분: 기타 */
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; min-height:100vh; background:var(--bg); color:var(--text); font-family:'Noto Sans KR', sans-serif;}
+  a{color:inherit;}
+
+  /* ---- 고정 브랜드 바 ---- */
+  .app-topbar{
+    position:fixed; top:0; left:0; right:0; z-index:30; background:#fff;
+    border-bottom:1px solid var(--line); padding:8px 16px;
+  }
+
+  /* ---- 헤더(검색/필터/정렬) ---- */
+  .topbar{
+    position:sticky; z-index:20; background:#fff;
+    box-shadow:0 1px 0 var(--line);
+    padding:8px 16px 0;
+  }
+  .brand-row{display:flex; align-items:center; justify-content:space-between;}
+  .brand{display:flex; align-items:center; gap:8px;}
+  .brand-badge{
+    width:26px; height:26px; border-radius:8px; background:var(--accent);
+    display:flex; align-items:center; justify-content:center; color:#fff; font-weight:900; font-size:13px;
+  }
+  .brand-name{font-weight:700; font-size:13.5px;}
+  .brand-sub{font-size:10px; color:var(--text-dim); margin-top:-1px;}
+
+  /* ---- 검색창 ---- */
+  .search-bar{
+    display:flex; align-items:center; gap:8px; background:var(--bg); border-radius:20px;
+    padding:7px 14px; margin-bottom:7px;
+  }
+  .search-bar svg{color:var(--text-dim); flex-shrink:0;}
+  .search-bar input{flex:1; border:none; background:transparent; outline:none; font-size:13.5px; font-family:'Noto Sans KR', sans-serif; color:var(--text);}
+  .search-bar input::placeholder{color:#A6ABB4;}
+  .clear-x{width:18px; height:18px; border-radius:50%; background:#D3D7DD; color:#fff; border:none; cursor:pointer; display:none; align-items:center; justify-content:center; font-size:11px; flex-shrink:0;}
+  .clear-x.show{display:flex;}
+
+  /* ---- "전체 N · 표시 N" 카운트 + 필터 버튼 ---- */
+  .count-filter-row{display:flex; align-items:center; justify-content:space-between; padding-bottom:6px;}
+  .total-count{font-size:12px; color:var(--text-dim);}
+  .total-count b{color:var(--text); font-weight:700;}
+  .filter-open-btn{
+    display:flex; align-items:center; gap:5px; background:var(--accent-soft); color:var(--accent);
+    border:none; border-radius:14px; padding:5px 12px; font-weight:700; font-size:12px; cursor:pointer;
+  }
+  .filter-open-btn .fbadge{
+    background:var(--accent); color:#fff; border-radius:50%; width:15px; height:15px; font-size:9.5px;
+    display:flex; align-items:center; justify-content:center;
+  }
+
+  /* ---- 정렬 탭 (이름 / 과목 / 실험실) ---- */
+  .sort-row{display:flex; gap:4px; padding:0 0 6px; border-top:1px solid var(--line);}
+  .sort-tab{
+    display:flex; align-items:center; gap:3px; background:none; border:none; cursor:pointer;
+    font-size:12.5px; color:var(--text-dim); padding:6px 12px 4px; font-family:'Noto Sans KR', sans-serif; font-weight:500;
+    border-bottom:2px solid transparent;
+  }
+  .sort-tab.active{color:var(--accent); font-weight:700; border-bottom-color:var(--accent);}
+  .sort-tab .arrow{font-size:11px;}
+
+  /* ---- 적용된 필터를 보여주는 칩(chip)들 ---- */
+  .active-chips{display:flex; flex-wrap:wrap; gap:6px; padding:0 16px 8px;}
+  .chip{
+    font-size:12px; background:var(--accent-soft); color:var(--accent); border-radius:14px;
+    padding:5px 8px 5px 12px; display:flex; align-items:center; gap:6px; font-weight:600;
+  }
+  .chip button{border:none; background:none; cursor:pointer; color:var(--accent); font-size:12px; padding:0; line-height:1;}
+  .chip-reset{font-size:12px; color:var(--text-dim); text-decoration:underline; background:none; border:none; cursor:pointer;}
+
+  main{max-width:1100px; margin:0 auto; padding:0 0 100px; background-color:#F2F4F7;}
+  .empty{text-align:center; padding:60px 20px; color:var(--text-dim); font-size:13px;}
+
+  /* ---- 기자재 리스트 한 줄(행) 스타일: 썸네일 + 이름/설명/태그 ---- */
+  .list-row{
+    display:flex; align-items:flex-end; gap:14px; padding:14px 16px; cursor:pointer;
+    border-bottom:1px solid var(--line); background-color:#fff;
+  }
+  .list-row:hover{background:#FAFBFC;}
+  .thumb-wrap{position:relative; flex-shrink:0;}
+  .subject-chip{
+    position:absolute; bottom:-3px; right:-3px; width:11px; height:11px; border-radius:50%; background:var(--accent);
+    border:2px solid #fff; z-index:2;
+  }
+  .list-row[data-subject="물리"] .subject-chip{background:var(--physics);}
+  .list-row[data-subject="화학"] .subject-chip{background:var(--chem);}
+  .list-row[data-subject="지구"] .subject-chip{background:var(--earth);}
+  .list-row[data-subject="생명"] .subject-chip{background:var(--bio);}
+  .list-row[data-subject="기타"] .subject-chip{background:var(--etc);}
+
+  .thumb{
+    width:76px; height:76px; border-radius:8px; background:var(--bg); border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center; color:#B7BCC4; font-size:10px; text-align:center;
+    object-fit:cover;
+  }
+  .row-body{flex:1; min-width:0;}
+  .row-desc{font-size:12px; color:var(--text-dim); margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .row-name{font-size:16px; font-weight:700; margin-bottom:6px;}
+  .row-tags{display:flex; gap:16px; flex-wrap:wrap;}
+  .row-tag{display:flex; align-items:center; gap:6px; font-size:12px;}
+  .row-tag .tag-key{
+    border:1px solid #C9CDD4; border-radius:5px; padding:0.8px 4px; font-size:9.5px; color:var(--text-dim); font-weight:600;
+  }
+  .row-tag .tag-val{font-weight:600; color:var(--text);}
+
+  
+
+
+  .modal-overlay{position:fixed; inset:0; background:rgba(20,24,30,0.45); z-index:40; display:none; align-items:flex-end; justify-content:center;}
+  .modal-overlay.open{display:flex;}
+  @media (min-width:640px){ .modal-overlay{align-items:center;} }
+
+  .filter-modal{
+    background:#fff; width:100%; max-width:480px; max-height:82vh; border-radius:20px 20px 0 0;
+    display:flex; flex-direction:column; overflow:hidden;
+  }
+  @media (min-width:640px){ .filter-modal{border-radius:20px;} }
+  .filter-head{padding:16px 18px 10px; display:flex; justify-content:space-between; align-items:center;}
+  .filter-head h2{font-size:17px; font-weight:900; margin:0;}
+  .filter-head button{background:var(--bg); border:none; width:28px; height:28px; border-radius:50%; cursor:pointer; font-size:13px; color:var(--text-dim);}
+
+  .filter-body{overflow-y:auto; padding:6px 18px 10px; flex:1;}
+  .filter-section{margin-bottom:18px;}
+  .filter-section-title{font-size:13.5px; font-weight:900; color:var(--text); margin-bottom:8px; padding-top:14px;}
+  .filter-section:first-child .filter-section-title{padding-top:0;}
+  .filter-section-title::after{content:""; display:block; border-top:1px solid var(--line); margin-top:8px;}
+  .pill-row{display:flex; flex-wrap:wrap; gap:8px;}
+  .pill{
+    padding:9px 16px; border-radius:18px; background:var(--bg); color:var(--text); font-size:13px; font-weight:600;
+    cursor:pointer; border:1.5px solid transparent; user-select:none;
+  }
+  .pill.selected{background:var(--accent); color:#fff;}
+
+  .filter-foot{padding:14px 18px; border-top:1px solid var(--line);}
+  .apply-btn{
+    width:100%; background:var(--accent); color:#fff; border:none; border-radius:14px; padding:14px;
+    font-size:15px; font-weight:700; cursor:pointer;
+  }
+  .reset-link{display:block; text-align:center; margin-top:10px; font-size:12.5px; color:var(--text-dim); text-decoration:underline; background:none; border:none; cursor:pointer; width:100%;}
+
+  
+
+  .detail-overlay{position:fixed; inset:0; background:rgba(20,24,30,0.45); z-index:50; display:none; align-items:center; justify-content:center; padding:16px;}
+  .detail-overlay.open{display:flex;}
+  .detail-modal{background:#fff; border-radius:20px; max-width:420px; width:100%; max-height:85vh; overflow-y:auto;}
+  .detail-head{padding:18px 18px 4px; display:flex; justify-content:space-between; align-items:flex-start;}
+  .detail-tag{font-size:12px; font-weight:700; color:var(--accent);}
+  .detail-title{font-size:19px; font-weight:900; margin-top:3px;}
+  .detail-close{background:var(--bg); border:none; width:28px; height:28px; border-radius:50%; cursor:pointer; font-size:13px; color:var(--text-dim); flex-shrink:0;}
+  .detail-body{padding:14px 18px 20px;}
+  .detail-thumb{width:100%; height:140px; border-radius:14px; background:var(--bg); display:flex; align-items:center; justify-content:center; color:#B7BCC4; font-size:12px; margin-bottom:16px; object-fit:contain;}
+  .detail-section{margin-bottom:14px;}
+  .detail-label{font-size:11.5px; font-weight:700; color:var(--text-dim); margin-bottom:4px;}
+  .detail-text{font-size:13.5px; line-height:1.6;}
+  .tag-pills{display:flex; flex-wrap:wrap; gap:6px;}
+  .tag-pill{font-size:11.5px; background:var(--accent-soft); color:var(--accent); padding:4px 10px; border-radius:12px; font-weight:600;}
+ 
+
+
+  .bottom-nav{
+    position:fixed; left:0; right:0; bottom:0; z-index:25; display:flex;
+    background:#fff; border-top:1px solid var(--line);
+    padding-bottom:env(safe-area-inset-bottom, 0);
+  }
+  .switch-tab{
+    flex:1; display:flex; flex-direction:column; align-items:center; gap:2px;
+    padding:6px 0 6px; background:none; border:none; cursor:pointer;
+  }
+  .switch-tab + .switch-tab{border-left:1px solid var(--line);}
+  .switch-tab .tab-icon{color:#C3C7CE; transition:color .12s ease;}
+  .switch-tab .tab-icon svg{width:20px; height:20px; display:block;}
+  .switch-tab .tab-label{font-size:10.5px; font-weight:700; color:var(--text-dim); transition:color .12s ease;}
+  .switch-tab.active .tab-icon{color:var(--accent);}
+  .switch-tab.active .tab-label{color:#171A1F;}
+
+  /* ---- 페이지네이션 ---- */
+  .pagination{display:flex; justify-content:center; align-items:center; gap:6px; flex-wrap:wrap; padding:22px 16px;}
+  .page-btn{
+    min-width:40px; height:40px; padding:0 8px; border-radius:9px; border:1.5px solid var(--line); background:#fff;
+    color:var(--text); font-size:14px; font-weight:700; cursor:pointer; font-family:'Noto Sans KR', sans-serif;
+  }
+  .page-btn.active{border-color:var(--accent); color:var(--accent);}
+  .page-btn:disabled{color:#C9CDD4; cursor:default;}
+
+  /* ---- 푸터 ---- */
+  .site-footer{background:var(--bg); padding:8px 20px 76px; text-align:center; border-top:1px solid var(--line);}
+  .footer-heading{font-size:11.5px; font-weight:800; letter-spacing:.06em; color:var(--text-dim); text-transform:uppercase; margin:24px 0 12px;}
+  .footer-links{display:flex; justify-content:center; gap:18px; flex-wrap:wrap; margin-bottom:22px;}
+  .footer-links a{font-size:13px; font-weight:700; color:var(--accent); text-decoration:underline; text-underline-offset:3px;}
+  .footer-credit a{font-size:12.5px; color:var(--text-dim); text-decoration:underline; text-underline-offset:3px;}
+
+  /* ---- 지도 섹션 (물리지학실 / 화학실 도면) ---- */
+  .map-page{max-width:1100px; margin:0 auto; padding:18px 16px 40px;}
+  .map-section{margin-bottom:32px;}
+  .map-heading{font-size:17px; font-weight:900; color:var(--text); margin:0 0 10px;}
+  .map-diagram{
+    position:relative; width:100%; aspect-ratio:1994/1399; background:var(--bg);
+    border:1.5px dashed var(--line); border-radius:12px; overflow:hidden;
+    display:flex; align-items:center; justify-content:center; text-align:center; padding:16px;
+  }
+  .map-diagram img{width:100%; height:100%; object-fit:cover; display:block;}
+  .map-diagram-placeholder{color:var(--text-dim); font-size:13px; line-height:1.7;}
+  .map-diagram-placeholder b{color:var(--text); font-weight:800;
+  }
+
+
+
+
+

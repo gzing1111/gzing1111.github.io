@@ -1,0 +1,182 @@
+<!--
+  ============================================================
+  실험실 기자재 카탈로그 (lab-catalog.html)
+  ============================================================
+  전체 구조 한눈에 보기:
+   1) <head> 안 <style> 태그        → 모든 디자인/레이아웃 (CSS)
+   2) <body> 상단부                 → 고정 상단바, 검색/필터/정렬 UI
+   3) <main id="labMain">           → 기자재 리스트 + 페이지네이션 (실제 화면)
+   4) <div id="mapSection">         → "지도" 탭 내용 (물리지학실/화학실 도면)
+   5) <div class="site-footer">     → Contributors, 개발자 크레딧
+   6) <div class="bottom-nav">      → 하단 고정 탭 (실험기구 / 지도 전환)
+   7) 필터 모달 / 상세 모달          → 팝업으로 뜨는 부분
+   8) <script> 태그 안               → 데이터(EQUIPMENT 배열) + 모든 동작 로직(JS)
+
+  ★ 기자재를 추가/수정하려면 → <script> 안의 EQUIPMENT 배열만 수정하면 됩니다.
+    (다른 부분은 자동으로 그 데이터를 읽어서 화면을 그려줍니다)
+  ============================================================
+-->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- 아래 두 줄: 기기가 다크모드여도 이 페이지는 항상 라이트모드(흰 배경)로 강제 고정
+     ※ 문법 주의: "only light"가 맞고 "light only"는 잘못된 문법이라 무시됨 -->
+<meta name="color-scheme" content="only light">
+<meta name="theme-color" content="#ffffff">
+<title>평택여고 실험실 카탈로그</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- ① 화면 맨 위 고정(fixed) 브랜드 바: 로고 + 제목. 스크롤해도 항상 보임 -->
+<div class="app-topbar" id="appTopbar">
+  <div class="brand-row">
+    <div class="brand">
+      <div class="brand-badge">P</div>
+      <div>
+        <div class="brand-name">평택여고 실험실 카탈로그</div>
+        <div class="brand-sub">물리지학실 & 화학실</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ②  ①번 고정바에 가려지지 않도록 자리를 확보해주는 빈 div (높이는 JS가 자동 계산) -->
+<div id="topSpacer"></div>
+
+<!-- ③ 검색창 + "전체/표시" 개수 + 필터 버튼 + 정렬 탭 + 적용된 필터 칩
+      → ①번 아래 붙어서 스크롤을 따라가다가 화면 상단에 닿으면 거기서 멈춤(sticky) -->
+<div class="topbar" id="topbar">
+  <div id="labControls">
+    <div class="search-bar">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input id="searchInput" type="text" placeholder="기자재명, 관련 실험으로 검색">
+      <button class="clear-x" id="clearBtn">✕</button>
+    </div>
+
+    <div class="count-filter-row">
+      <div class="total-count">전체 <b id="totalCount">0</b> · 표시 <b id="shownCount">0</b></div>
+      <button class="filter-open-btn" id="openFilterBtn">
+        필터 <span class="fbadge" id="filterBadge" style="display:none;">0</span>
+      </button>
+    </div>
+
+    <div class="sort-row" id="sortRow">
+      <button class="sort-tab active" data-key="name">이름 <span class="arrow">↑</span></button>
+      <button class="sort-tab" data-key="subject">과목</button>
+      <button class="sort-tab" data-key="room">실험실</button>
+    </div>
+
+    <div class="active-chips" id="activeChips"></div>
+  </div>
+</div>
+
+<!-- ④ 실제 기자재 리스트가 그려지는 자리.
+      listWrap 내부 내용은 전부 JS의 render() 함수가 자동 생성함 (아래에 직접 쓰지 않음) -->
+<main id="labMain">
+  <div id="listWrap"></div>
+  <div class="empty" id="emptyMsg" style="display:none;">검색/필터 조건에 맞는 기자재가 없습니다.</div>
+  <div class="pagination" id="paginationWrap"></div>
+</main>
+
+<!-- ⑤ "지도" 탭을 눌렀을 때 보이는 화면 (기본값은 display:none 으로 숨겨져 있음)
+      하단 bottom-nav에서 "지도" 버튼을 누르면 JS가 이 div를 보여주고 ④번(labMain)은 숨김 -->
+<div id="mapSection" style="display:none;">
+  <div class="map-page">
+    <div class="map-section">
+      <div class="map-heading">물리지학실</div>
+      <!-- 실제 도면 사진이 준비되면 아래 div를 지우고
+           <img src="파일경로.jpg" alt="물리지학실 도면"> 태그를 그 자리에 넣어주세요.
+           권장 이미지 크기: 가로 1200px × 세로 843px (비율 1.425:1) -->
+      <div class="map-diagram">
+       
+        <img src="images/muhishildomyeon.png" alt="물지실 도면">
+         </div>
+      </div>
+    <div class="map-section">
+      <div class="map-heading">화학실</div>
+      <!-- 실제 도면 사진이 준비되면 아래 div를 지우고
+           <img src="파일경로.jpg" alt="화학실 도면"> 태그를 그 자리에 넣어주세요.
+           권장 이미지 크기: 가로 1200px × 세로 843px (비율 1.425:1) -->
+      <div class="map-diagram">
+        <img src="images/hwahwaksildomyeon.png" alt="화학실 도면">
+         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ⑥ 맨 아래 Contributors / 개발자 크레딧 영역
+      두 번째 참여자 인스타 링크는 아직 미정이라 href="#" 로 비워둠 -->
+<div class="site-footer">
+  <div class="footer-heading">Contributors</div>
+  <div class="footer-links">
+    <a href="https://www.instagram.com/yeoyoonxi?igsh=MWE3Ym96bWkxZXNmdA==" target="_blank" rel="noopener">yeoyoonxi</a>
+    <a href="https://www.instagram.com/kwldn12?igsh=MWJjNDVrdnAwcHFsdA==" target="_blank" rel="noopener">kwldn12</a>
+    <a href="https://claude.ai" target="_blank" rel="noopener">가장사랑하는친구</a>
+  </div>
+  <div class="footer-credit">
+    <a href="https://www.instagram.com/eunchae_1111?igsh=MjZ4MDY1cTN3NGpl" target="_blank" rel="noopener">Developed by eunchae</a>
+  </div>
+</div>
+
+<!-- ⑦ 화면 맨 아래 고정(fixed)된 탭 바: "실험기구" ↔ "지도" 전환 버튼
+      각 버튼의 data-section 값("lab"/"map")을 JS가 읽어서 어느 화면을 보여줄지 결정함 -->
+<div class="bottom-nav" id="sectionSwitch">
+  <button class="switch-tab active" data-section="lab">
+    <svg class="tab-icon" width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M9 2v6.2L4.2 18.4A2 2 0 0 0 6 21.3h12a2 2 0 0 0 1.8-2.9L15 8.2V2"/>
+      <path d="M9 2h6"/>
+      <path d="M6.5 15.5h11"/>
+    </svg>
+    <span class="tab-label">실험기구</span>
+  </button>
+  <button class="switch-tab" data-section="map">
+    <svg class="tab-icon" width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M9 4 3 6.5v14L9 18l6 2.5 6-2.5v-14l-6 2.5-6-2.5Z"/>
+      <path d="M9 4v14"/>
+      <path d="M15 6.5v14"/>
+    </svg>
+    <span class="tab-label">지도</span>
+  </button>
+</div>
+
+<!-- ⑧ 필터 모달: "필터" 버튼 누르면 뜨는 팝업.
+      subjectPills / roomPills 내부 버튼들은 JS의 buildPills() 함수가 자동 생성함 -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="filter-modal">
+    <div class="filter-head">
+      <h2>필터</h2>
+      <button id="closeFilterBtn">✕</button>
+    </div>
+    <div class="filter-body">
+      <div class="filter-section">
+        <div class="filter-section-title">과목 분류</div>
+        <div class="pill-row" id="subjectPills"></div>
+      </div>
+      <div class="filter-section">
+        <div class="filter-section-title">실험실 (위치)</div>
+        <div class="pill-row" id="roomPills"></div>
+      </div>
+    </div>
+    <div class="filter-foot">
+      <button class="apply-btn" id="applyFilterBtn">적용하기</button>
+      <button class="reset-link" id="resetFilterBtn">전체 초기화</button>
+    </div>
+  </div>
+</div>
+
+<!-- ⑨ 상세 모달: 리스트에서 기자재를 클릭하면 뜨는 팝업.
+      내용은 비어있고, JS의 openDetail() 함수가 클릭할 때마다 내용을 채워 넣음 -->
+<div class="detail-overlay" id="detailOverlay">
+  <div class="detail-modal" id="detailModal"></div>
+</div>
+<script src="data.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
