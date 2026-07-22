@@ -1,16 +1,14 @@
- /* 다크모드 강제 방지: html/body 배경색을 항상 밝게 고정 (기기 다크모드 무시) */
   html{ color-scheme: only light; background:#F2F4F7; height:100%; width:100%; }
   html, body{ background-color:#F2F4F7 !important; width:100%; min-height:100%; overflow-x:hidden; }
   body, main, .list-row, .topbar, .card, .thumb{ color-scheme: only light; }
 
-  /* ---- 색상/디자인 토큰: 여기 값만 바꾸면 전체 배색이 한번에 바뀝니다 ---- */
-  :root{
+   :root{
     --bg:#F2F4F7;        /* 페이지 배경(연회색) */
     --card:#FFFFFF;      /* 카드/리스트 행 배경(흰색) */
     --line:#E5E8ED;      /* 구분선 색 */
     --text:#2B2F36;      /* 기본 진한 글자색 */
-    --text-dim:#8A909B;  /* 옅은 보조 글자색(설명, 라벨 등) */
-    --accent:#3E8FD0;    /* 포인트 색(파란색) - 선택/활성 표시에 사용 */
+    --text-dim:#8A909B;  /* 옅은 보조 글자색 */
+    --accent:#3E8FD0;    /* 포인트 색(파란색) */
     --accent-soft:#EAF3FC; /* 포인트 색의 옅은 배경 버전 */
     --physics:#3E8FD0;   /* 과목별 색 구분: 물리 */
     --chem:#E0764F;      /* 과목별 색 구분: 화학 */
@@ -22,13 +20,13 @@
   body{margin:0; min-height:100vh; background:var(--bg); color:var(--text); font-family:'Noto Sans KR', sans-serif;}
   a{color:inherit;}
 
-  /* ---- 고정 브랜드 바 ---- */
+  /*  고정 브랜드 바  */
   .app-topbar{
     position:fixed; top:0; left:0; right:0; z-index:30; background:#fff;
     border-bottom:1px solid var(--line); padding:8px 16px;
   }
 
-  /* ---- 헤더(검색/필터/정렬) ---- */
+  /* 헤더(검색/필터/정렬) */
   .topbar{
     position:sticky; z-index:20; background:#fff;
     box-shadow:0 1px 0 var(--line);
@@ -43,7 +41,7 @@
   .brand-name{font-weight:700; font-size:13.5px;}
   .brand-sub{font-size:10px; color:var(--text-dim); margin-top:-1px;}
 
-  /* ---- 검색창 ---- */
+  /* 검색창 */
   .search-bar{
     display:flex; align-items:center; gap:8px; background:var(--bg); border-radius:20px;
     padding:7px 14px; margin-bottom:7px;
@@ -54,7 +52,7 @@
   .clear-x{width:18px; height:18px; border-radius:50%; background:#D3D7DD; color:#fff; border:none; cursor:pointer; display:none; align-items:center; justify-content:center; font-size:11px; flex-shrink:0;}
   .clear-x.show{display:flex;}
 
-  /* ---- "전체 N · 표시 N" 카운트 + 필터 버튼 ---- */
+  /*  "전체 N · 표시 N" 카운트 + 필터 버튼  */
   .count-filter-row{display:flex; align-items:center; justify-content:space-between; padding-bottom:6px;}
   .total-count{font-size:12px; color:var(--text-dim);}
   .total-count b{color:var(--text); font-weight:700;}
@@ -67,7 +65,7 @@
     display:flex; align-items:center; justify-content:center;
   }
 
-  /* ---- 정렬 탭 (이름 / 과목 / 실험실) ---- */
+  /* 정렬 탭 (이름 / 과목 / 실험실) */
   .sort-row{display:flex; gap:4px; padding:0 0 6px; border-top:1px solid var(--line);}
   .sort-tab{
     display:flex; align-items:center; gap:3px; background:none; border:none; cursor:pointer;
@@ -77,7 +75,7 @@
   .sort-tab.active{color:var(--accent); font-weight:700; border-bottom-color:var(--accent);}
   .sort-tab .arrow{font-size:11px;}
 
-  /* ---- 적용된 필터를 보여주는 칩(chip)들 ---- */
+  /* 적용된 필터 보여주는 칩 */
   .active-chips{display:flex; flex-wrap:wrap; gap:6px; padding:0 16px 8px;}
   .chip{
     font-size:12px; background:var(--accent-soft); color:var(--accent); border-radius:14px;
@@ -89,7 +87,7 @@
   main{max-width:1100px; margin:0 auto; padding:0 0 100px; background-color:#F2F4F7;}
   .empty{text-align:center; padding:60px 20px; color:var(--text-dim); font-size:13px;}
 
-  /* ---- 기자재 리스트 한 줄(행) 스타일: 썸네일 + 이름/설명/태그 ---- */
+  /* 기자재 리스트 한 줄 스타일: 썸네일 + 이름/설명/태그 */
   .list-row{
     display:flex; align-items:flex-end; gap:14px; padding:14px 16px; cursor:pointer;
     border-bottom:1px solid var(--line); background-color:#fff;
@@ -191,7 +189,7 @@
   .switch-tab.active .tab-icon{color:var(--accent);}
   .switch-tab.active .tab-label{color:#171A1F;}
 
-  /* ---- 페이지네이션 ---- */
+  /* 페이지네이션 */
   .pagination{display:flex; justify-content:center; align-items:center; gap:6px; flex-wrap:wrap; padding:22px 16px;}
   .page-btn{
     min-width:40px; height:40px; padding:0 8px; border-radius:9px; border:1.5px solid var(--line); background:#fff;
@@ -200,14 +198,14 @@
   .page-btn.active{border-color:var(--accent); color:var(--accent);}
   .page-btn:disabled{color:#C9CDD4; cursor:default;}
 
-  /* ---- 푸터 ---- */
+  /* 푸터 */
   .site-footer{background:var(--bg); padding:8px 20px 76px; text-align:center; border-top:1px solid var(--line);}
   .footer-heading{font-size:11.5px; font-weight:800; letter-spacing:.06em; color:var(--text-dim); text-transform:uppercase; margin:24px 0 12px;}
   .footer-links{display:flex; justify-content:center; gap:18px; flex-wrap:wrap; margin-bottom:22px;}
   .footer-links a{font-size:13px; font-weight:700; color:var(--accent); text-decoration:underline; text-underline-offset:3px;}
   .footer-credit a{font-size:12.5px; color:var(--text-dim); text-decoration:underline; text-underline-offset:3px;}
 
-  /* ---- 지도 섹션 (물리지학실 / 화학실 도면) ---- */
+  /* 지도 섹션 (물리지학실 / 화학실 도면) */
   .map-page{max-width:1100px; margin:0 auto; padding:18px 16px 40px;}
   .map-section{margin-bottom:32px;}
   .map-heading{font-size:17px; font-weight:900; color:var(--text); margin:0 0 10px;}
