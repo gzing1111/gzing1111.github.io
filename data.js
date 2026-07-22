@@ -233,7 +233,7 @@ const EQUIPMENT = [
 , photo:"images/2jigubon.jfif"},
 
 {subject:"기타", room:"물지실", name:"흰스탠드", desc:"실험 대상에 균일한 조명을 제공하여 관찰과 촬영을 돕는 광원 기구",
-   tags:["실험기구고정","지지대"], usage:"장시간 사용 시 램프가 뜨거울 수 있으므로 주의하고, 사용 후에는 전원을 반드시 끄고 원래 위치에 보관합니다.", location:"물지실 1번"
+   tags:["광학조명","실험보조도구"], usage:"장시간 사용 시 램프가 뜨거울 수 있으므로 주의하고, 사용 후에는 전원을 반드시 끄고 원래 위치에 보관합니다.", location:"물지실 1번"
 , photo:"images/1standwhite.jpg"},
 
 {subject:"물리", room:"물지실", name:"전구", desc:"전류를 흘려 빛과 열을 발생시키는 실험용 광원 기구",
