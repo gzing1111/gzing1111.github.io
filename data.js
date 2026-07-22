@@ -232,8 +232,8 @@ const EQUIPMENT = [
    tags:["위도경도","지구자전"], usage:"자전축 기울기를 확인하며 회전시켜 낮과 밤, 계절 변화를 설명하는 데 활용합니다.", location:"물지실 2번, 물지실 5번"
 , photo:"images/2jigubon.jfif"},
 
-{subject:"기타", room:"물지실", name:"흰스탠드", desc:"실험 기구를 고정하거나 지지하는 데 사용하는 스탠드",
-   tags:["실험기구고정","지지대"], usage:"클램프로 필요한 기구를 원하는 높이에 고정하며, 무게중심이 한쪽으로 쏠리지 않도록 균형을 맞춥니다.", location:"물지실 1번"
+{subject:"기타", room:"물지실", name:"흰스탠드", desc:"실험 대상에 균일한 조명을 제공하여 관찰과 촬영을 돕는 광원 기구",
+   tags:["실험기구고정","지지대"], usage:"장시간 사용 시 램프가 뜨거울 수 있으므로 주의하고, 사용 후에는 전원을 반드시 끄고 원래 위치에 보관합니다.", location:"물지실 1번"
 , photo:"images/1standwhite.jpg"},
 
 {subject:"물리", room:"물지실", name:"전구", desc:"전류를 흘려 빛과 열을 발생시키는 실험용 광원 기구",
@@ -293,7 +293,7 @@ const EQUIPMENT = [
    tags:["진자실험","실험보조도구"], usage:"필요한 길이로 잘라 사용하며, 매듭이 풀리지 않도록 단단히 고정합니다.", location:"그외"
 , photo:"images/0sil.jpg"},
 
-{subject:"기타", room:"물지실", name:"칼라보드", desc:"모형이나 구조물 제작에 사용하는 색상이 있는 스티로폼 보드",
+{subject:"기타", room:"물지실", name:"흰색 칼라보드", desc:"모형이나 구조물 제작에 사용하는 흰색 스티로폼 우드락 보드",
    tags:["모형제작","실험보조재료"], usage:"칼로 원하는 모양으로 자르거나 조립하며, 절단 시 손 베임에 주의합니다.", location:"그외"
 , photo:"images/0calarboard.jpg"},
 
